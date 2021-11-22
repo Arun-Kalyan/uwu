@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html ng-app='ControllerAsApp'>
+  <head>
+    <meta charset="utf-8">
+   <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js">
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-resource.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Custom Service</title>
+  </head>
+  <body>
+    <h1>Custom Service Through a Factory</h1>
+
+    <!-- LIST #1 - unlimited items -->
+    <div id="list1" ng-controller='ShoppingListController1 as list1'>
+      <h3>Shopping List #1</h3>
+      <input type="text" ng-model="list1.itemName" placeholder="item name">
+      <input type="text" ng-model="list1.itemQuantity" placeholder="quantity">
+      <button ng-click="list1.addItem();">Add Item</button>
+      <ol>
+        <li ng-repeat="item in list1.items">
+			
+          {{ item.quantity }} of {{ item.name }}
+          <button ng-click="list1.removeItem($index);">Remove Item</button>
+        </li>
+      </ol>
+      <div class="error">Error: {{list1.errorMessage}}</div>
+    </div>
+	
+	
+	<script>
+	
+	(function () {
+    'use strict';
+    
+    angular.module('ControllerAsApp', [])
+    .controller('ShoppingListController1', ShoppingListController1)
+    .factory('ShoppingListFactory', ShoppingListFactory);
+    
+    // LIST #1 - controller
+    ShoppingListController1.$inject = ['ShoppingListFactory'];
+    function ShoppingListController1(ShoppingListFactory) {
+      var list1 = this;
+    
+      // Use factory to create new shopping list service
+      var shoppingList = ShoppingListFactory();
+    
+      list1.items = shoppingList.getItems();
+	  console.log(list1.items);
+    
+      list1.itemName = "";
+      list1.itemQuantity = "";
+    
+      list1.addItem = function () {
+        shoppingList.addItem(list1.itemName, list1.itemQuantity);
+      }
+    
+      list1.removeItem = function (itemIndex) {
+        shoppingList.removeItem(itemIndex);
+      };
+    }
+	
+	function ShoppingListService(maxItems) {
+      var service = this;
+    
+      // List of shopping items
+      var items = [];
+    
+      service.addItem = function (itemName, quantity) {
+        if ((maxItems === undefined) ||
+            (maxItems !== undefined) && (items.length < maxItems)) {
+          var item = {
+            name: itemName,
+            quantity: quantity
+          };
+          items.push(item);
+        }
+        else {
+          throw new Error("Max items (" + maxItems + ") reached.");
+        }
+      };
+    
+      service.removeItem = function (itemIndex) {
+        items.splice(itemIndex, 1);
+      };
+    
+      service.getItems = function () {
+        return items;
+      };
+    }
+    
+    
+    function ShoppingListFactory() {
+      var factory = function (maxItems) {
+        return new ShoppingListService(maxItems);
+      };
+    
+      return factory;
+    }
+    
+    })();
+	
+	
+	
+	</script>
+
+  </body>
+</html>
