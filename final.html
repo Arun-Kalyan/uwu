@@ -1,0 +1,160 @@
+<!-- Attributes included.
+
+    1. ng-model
+    2. ng-module
+    3. ng-directive
+    4. ng-filter
+    5. ng-init
+    6. events
+    7. ng-animate
+    8. services
+
+
+-->
+
+<!DOCTYPE html>
+<html>
+<style>
+    .box {
+
+
+        transition: all linear 0.5s;
+        border: 2px solid black;
+        height: 50px;
+        width: 50%;
+        position: relative;
+        top: 0;
+        left: 0;
+
+    }
+
+    .ng-hide {
+
+        height: 0px;
+        width: 0px;
+        top: -200px;
+        left: 200px;
+    }
+</style>
+
+<head>
+    <title>Angular JS Final</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-animate.js"></script>
+
+</head>
+
+<body>
+    <center>
+
+
+        <div ng-app="myapp" ng-controller="myctrl" ng-init="intro = 'Welcome'">
+            <h1>{{header}}</h1>
+            <h1>Time is:</h1>
+            <h1>{{myTime}}</h1>
+            <hr>
+
+            <h2> Information Collection Form</h2>
+            <h4>User mail ID</h4>
+            <form name="myform">
+                Email <input type="email" name="address" ng-model="text">
+                <span ng-show="myform.address.$error.email">Invalid email address!</span>
+            </form>
+            <br><br>
+            <hr>
+
+            <h3> Student Detail Collection!</h3>
+
+            Name <input type="text" ng-model="name"><br><br>
+            Age <input type="text" ng-model="age"><br><br>
+            Department <input type="text" ng-model="dept"><br><br>
+            Room no <input type="number" ng-model="room"><br><br>
+
+            <input type="checkbox" ng-model="valueOfCheck">Click to Confirm!
+
+            <div class="box" ng-hide="valueOfCheck">This should be hiding now!</div>
+
+            <hr>
+            <h3> Student Summary</h3>
+            <h4>{{intro+", "+name+ "!"}}</h4>
+            <h4> Age: {{age}}</h4>
+            <h4>Department : {{dept}}</h4>
+            <h4>Room no : {{room}}</h4>
+
+
+            <br><br>
+            <hr>
+
+            <h2> Our Registered Students and their fair play points</h2>
+            <br><br>
+            Search <input type="text" ng-model="search"><br><br>
+            <table border="1">
+                <tr>
+                    <th ng-click="myOrderBy('name')"> Name </th>
+                    <th ng-click="myOrderBy('score')"> Score</th>
+
+                <tr ng-repeat="x in students | orderBy : orderByMe">
+                    <td> {{x.name}}</td>
+                    <td> {{x.value}}</td>
+                </tr>
+
+
+            </table>
+
+            <hr>
+
+            <h1> Food provided in Hostel</h1>
+            <button ng-click="myfunc()"> Menu</button>
+
+            <div ng-show="status">
+                <li>Pizza</li>
+                <li>Cake</li>
+                <li>Maggi</li>
+
+
+            </div>
+
+           
+        </div>
+    </center>
+
+</body>
+
+
+<script>
+
+    var app = angular.module("myapp", []);
+    app.controller("myctrl", myctrl, function ($scope, $timeout, $interval) {
+        $scope.header = "Angular JS summary!";
+        $timeout(function () {
+            $scope.header = "Thank you for connecting with us!";
+        }, 2000);
+
+        $scope.myTime = new Date().toLocaleTimeString();
+        $interval(function () {
+            $scope.myTime = new Date().toLocaleTimeString();
+        }, 1000);
+
+
+        $scope.students = [{ name: 'arun', value: 1000 }, { name: 'abi', value: 800 }, { name: 'sid', value: 700 }];
+
+        $scope.myOrderBy = function (x) {
+            $scope.orderByMe = x;
+        }
+
+
+        $scope.status = false;
+
+        $scope.myfunc = function () {
+            $scope.status = !$scope.status;
+
+        }
+
+       
+
+
+
+    });
+</script>
+
+</html>
