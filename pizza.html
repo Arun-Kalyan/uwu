@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title> Pizza</title>
+
+
+
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+<body>
+
+    <div ng-app="myapp" ng-controller="myctrl">
+
+        <h1> Welcome to pizza ordering system!</h1>
+
+        <p> Enter the pizza name to search: </p>
+        <input type="text" ng-model="search">
+
+        <br>
+        <h1> Available pizzas</h1>
+
+        <ul ng-repeat="x in pizzas | filter : search">
+            <li>{{x.name}}</li>
+
+        </ul>
+
+        <hr>
+        <form action='/setPizza' method='POST'>
+
+            Name : <input type="text" name="name">
+            <br>
+            <br>
+            <input type="submit" name="submit">
+        </form>
+
+
+
+    </div>
+
+</body>
+
+
+<script>
+    var app = angular.module("myapp", []);
+    app.controller("myctrl", function ($scope, $http) {
+        $http.get('/getPizza').then(function (data) {
+            $scope.pizzas = data.data;
+        });
+
+    });
+
+
+</script>
+
+
+</html>
